@@ -1,0 +1,201 @@
+\documentclass{beamer}
+\usetheme{Warsaw}
+
+\usepackage{enumerate}
+\usepackage{soul}
+
+\setbeamertemplate{footline}
+{
+  \leavevmode
+  \hbox{
+    \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}
+        \usebeamerfont{whitespace}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}
+        \hspace*{1em}
+        \insertframenumber{}
+        \hspace*{1em}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}
+        \usebeamerfont{whitespace}
+    \end{beamercolorbox}
+  }
+}
+
+\makeatletter
+\setbeamertemplate{navigation symbols}{}
+
+\title[Or how my wife started forgetting about my ability to wreck a home network]{Nix}
+\subtitle{Newcastle Cybersecurity Group}
+\author[Jay Rovacsek]{Jay Rovacsek}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\section{Introduction}
+\subsection{\$whoami}
+
+\begin{frame}
+    \begin{center}
+        Public speaking skills: a solid 2.75/10 - remind me now that I should slow down and chill-out
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        Wait a minute - you used that slide last year.
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        Yep! This talk is somewhat of a follow-on of the Feb 2021 session
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            If you have questions at any point feel free to jump in!
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/question.png}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \$whoami: I work for nib as part of the cybersecurity function
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/smile.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            What am I still not?
+            \begin{itemize}
+                \item A sysadmin
+                \item Good at making presentation slides
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/sysadmin.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Does any of this matter?
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/nope.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Nix?}
+\subsection{Intro}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            But why am I here presenting?
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/shrug.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item \st{Home networks are fun}
+        \item \st{Breaking your own stuff will assist in teaching you}
+        \item \st{Can run some cool services for yourself/family/friends}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    We might care about:
+    \begin{itemize}
+        \item Reproducibility of software
+        \item Infrastructure as code
+        \item Believing the hype on lobste.rs or Y-Combinator!
+    \end{itemize}
+\end{frame}
+
+\subsection{Reproducibility}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Is reproducibility really that important?
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/signature.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    Threat modeling upstream software sources:
+    \begin{itemize}
+        \item Malicious changes to source code
+        \item User/System compromise within the development chain
+        \item Watering-hole attacks
+        \item Any more?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    Reproducibility protects us from 2 of 3 of these
+    \begin{itemize}
+        \item \st{Malicious changes to source code}
+        \item User/System compromise within the development chain
+        \item Watering-hole attacks
+    \end{itemize}
+\end{frame}
+
+\section{Infrastructure As Code}
+\subsection{Why?}
+
+\begin{frame}
+    Infrastructure as code both minimises possible flaws of non-deterministic
+
+    \begin{itemize}
+        \item User/System compromise within the development chain
+        \item Watering-hole attacks
+    \end{itemize}
+\end{frame}
+
+\end{document}

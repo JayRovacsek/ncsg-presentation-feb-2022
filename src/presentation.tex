@@ -3,6 +3,8 @@
 
 \usepackage{enumerate}
 \usepackage{soul}
+\usepackage{xcolor}
+\usepackage{hyperref}
 
 \setbeamertemplate{footline}
 {
@@ -74,7 +76,12 @@
 \begin{frame}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            \$whoami: I work for nib as part of the cybersecurity function
+            \$whoami: I do cybers, but also very keen on:
+            \begin{itemize}
+                \item Chasing my kids around
+                \item Generation 1 Pokemon, as others are inferior
+                \item Picking up heavy things and putting them down
+            \end{itemize}
         \end{column}
         \begin{column}{0.5\textwidth}
             \begin{figure}
@@ -142,16 +149,31 @@
     \end{itemize}
 \end{frame}
 
+\subsection{Reproducibility}
+
 \begin{frame}
     We might care about:
     \begin{itemize}
         \item Reproducibility of software
-        \item Infrastructure as code
+        \item Declarative Environments
+        \item Reliable Environments
         \item Believing the hype on lobste.rs or Y-Combinator!
     \end{itemize}
 \end{frame}
 
-\subsection{Reproducibility}
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Reproducibility of software
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/reproducibility.jpg}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
 
 \begin{frame}
     \begin{columns}
@@ -168,7 +190,11 @@
 \end{frame}
 
 \begin{frame}
-    Threat modeling upstream software sources:
+    \centering It depends
+\end{frame}
+
+\begin{frame}
+    Threat modeling some upstream software sources:
     \begin{itemize}
         \item Malicious changes to source code
         \item User/System compromise within the development chain
@@ -186,16 +212,217 @@
     \end{itemize}
 \end{frame}
 
-\section{Infrastructure As Code}
-\subsection{Why?}
+\begin{frame}
+    \centering
+    How does Nix provide reproducibility?
+\end{frame}
 
 \begin{frame}
-    Infrastructure as code both minimises possible flaws of non-deterministic
+    \centering
+    We'll consider a simple binary on most Linux systems: find
+\end{frame}
 
+\begin{frame}
+    \centering
+    /nix/store\textbf{/jjvw20r6pz3ff7pn91yhvfx8s7izsqan}-findutils-4.8.0/bin/find
+\end{frame}
+
+\begin{frame}
+    \includegraphics[width=\textwidth,keepaspectratio]{../resources/what-in.jpg}
+\end{frame}
+
+\begin{frame}
+    \centering Anyone know what this would look like on Ubuntu?
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            Ubuntu:
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/ubuntu-find.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            Nix:
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth,keepaspectratio]{../resources/nix-find.png}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    There's a few things to note in these images, taking for example Ubuntu:
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,keepaspectratio]{../resources/ubuntu-find.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,keepaspectratio]{../resources/ubuntu-find.png}
+    \end{figure}
     \begin{itemize}
-        \item User/System compromise within the development chain
-        \item Watering-hole attacks
+        \item File metadata regarding the create time has been left in
+        \item The linker is a pretty standard location for this
+        \item We've got a build ID that links to Canonical's build
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \centering
+    Do we trust this binary?
+\end{frame}
+
+\begin{frame}
+    \centering
+    I mean, generally yeah we probably could.
+\end{frame}
+
+\begin{frame}
+    \centering
+    Could we reproduce the \textit{exact same binary} given the source code of \textbf{\textit{find}}?
+\end{frame}
+
+\begin{frame}
+    \centering
+    \includegraphics[width=\textheight,keepaspectratio]{../resources/rabbit-hole.jpg}
+\end{frame}
+
+\begin{frame}
+    We could probably, but we'd need to:
+    \begin{itemize}
+        \item Utilise a build system that applies the same build process as the original
+        \item Ensure we had no volatile inputs (network data is consistent and trustworthy \& more)
+        \item Utilise the same makefile (was it the \href{https://git.savannah.gnu.org/cgit/findutils.git/tree/Makefile.am}{\color{blue}original GNU} one or a modified one?)
+        \item Ensure the compiler zeros all memory before value initialisation
+        \item Uses the same version information
+        \item Ensure the compiled output has the same timestamp
+        \item Ensure no locale-specific options have side effects on the compile
+        \item Ensure stable ordering for outputs (Do python dictionaries always yield their keys in the same order?)
+        \item Eliminate PRNG in compile if relevant
+        \item Ensure debug symbols are removed (may contain environment values specific to us)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \centering
+    Was that last slide cutoff?
+\end{frame}
+
+\begin{frame}
+    \centering
+    Yep! Those considerations are just the tip of the iceberg!
+    \includegraphics[width=\textwidth]{../resources/iceberg.png}
+\end{frame}
+
+\begin{frame}
+    \centering
+    So how does Nix avoid all of these pitfalls?
+\end{frame}
+
+\begin{frame}
+    \centering
+    Nix creates \textit{derivations} which is just a fancy word for builds.
+    \par\vspace{5mm}
+    Derivations are however distinct to not only the software version you're building.
+    But all of the inputs also
+\end{frame}
+
+\begin{frame}
+    \centering
+    Because of this feature, we can \textit{know} that the method in which we build and install our
+    software of choice is \ul{the same} as what the author of the derivation intended.
+\end{frame}
+
+\begin{frame}
+    \centering
+    Why is it provable with Nix?
+\end{frame}
+
+\begin{frame}
+    \centering
+    In short: the generated path is linked to both the software as well as all inputs
+    within the dependency tree
+    \par\vspace{5mm}
+    /nix/store\textbf{/jjvw20r6pz3ff7pn91yhvfx8s7izsqan}-findutils-4.8.0/bin/find
+\end{frame}
+
+\begin{frame}
+    Steps to generate this hash (paraphrasing):
+    \begin{itemize}
+        \item SHA256 the descriptor of a build
+        \item Recursively SHA256 files required in the build process in a deterministic order, truncating output then base32
+        \item ???
+        \item ???
+        \item Profit!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \centering
+    Are all Nix configs and packages reproducible?
+\end{frame}
+
+\begin{frame}
+    \centering
+    Questions on any of this?
+    \includegraphics{../resources/question-2.png}
+\end{frame}
+
+\section{Reliability}
+
+\begin{frame}
+    \centering
+    Reliability
+\end{frame}
+
+\begin{frame}
+    \centering
+    \includegraphics[width=\textheight,keepaspectratio]{../resources/linux-wont-boot.png}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \includegraphics[width=\textheight,keepaspectratio]{../resources/nix-grub-bios.jpg}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \includegraphics[width=\textheight,keepaspectratio]{../resources/what-if-i-told-you.jpg}
+\end{frame}
+
+\begin{frame}
+    Downsides of generations?
+    \begin{itemize}
+        \item Well, mostly just disk space
+    \end{itemize}
+    But who doesn't have the ability to utilise multi-gigabyte drives nowadays?
+\end{frame}
+
+\begin{frame}
+    \centering
+    Resolving disk space issue?
+    \par\vspace{5mm}
+    Easy! Nix has a garbage collector!
+    \includegraphics[width=\textheight,keepaspectratio]{../resources/trash-truck.jpg}
+\end{frame}
+
+\begin{frame}
+    \centering
+    Where to from here?
+\end{frame}
+
+\begin{frame}
+    \centering
+    Fin!
 \end{frame}
 
 \end{document}
